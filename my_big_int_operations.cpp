@@ -32,7 +32,7 @@ std::string plus(std::string value_1, std::string value_2) {
 
   return result;
 }
-std::string minus(std::string value_1, std::string value_2) {
+std::string minus(std::string value_1, std::string value_2) { // TODO: fix minus
   int value_1_size = value_1.size(), value_2_size = value_2.size();
 
   std::string result;
@@ -51,16 +51,28 @@ std::string minus(std::string value_1, std::string value_2) {
 
   int diff, tmp = 0;
 
-  bool is = false;
+  bool isTaken = false;
 
   for (int i = value_1_size-1, k=value_2_size-1; i >= 0; i--, k--) {
-    if (k >= 0)
-      if (value_1[i]=='0') // TODO: complete check
-      diff = (value_1[i]-'0'-value_2[k]-'0')-tmp;
+    if (k >= 0) {
+      if (value_1[i]<value_2[k] && !isTaken)  {
+        tmp = value_1[i]-'0' + 10;
+        diff = tmp-value_2[k]-'0';
+        isTaken = true;
+      }
+      else if (value_1[i]<value_2[k] && isTaken) {
+        tmp = value_1[i]-'0' + 9;
+        diff = tmp-value_2[k]-'0';
+        isTaken = false;
+      }
+      else if (isTaken) {
+        diff = value_1[i]-'0'-value_2[k]-'0'-1;
+      }
+
+    }
     else
-      diff = value_1[i]-'0'-tmp;
-    tmp = tmp / 10;
-    result.push_back(tmp%10+'0');
+      diff = value_1[i]-'0';
+    result.push_back(diff+'0');
   }
 
   std::reverse(result.begin(), result.end());
@@ -83,7 +95,7 @@ int main() {
   std::string result;
   result = plus("123", "123");
   std::cout << "Plus: " << result << std::endl;
-  result = minus("123", "123");
+  result = minus("1999", "123");
   std::cout << "Minus: " << result << std::endl;
   result = multiply("123", "123");
   std::cout << "Multiply: " << result << std::endl;
